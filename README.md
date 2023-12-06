@@ -11,7 +11,7 @@ cd your-repo-name
 
 ### Requirements
 
-Ensure you have the following installed: \
+Ensure you have the following installed:
 - Python 3
 - NumPy
 - PyTorch
