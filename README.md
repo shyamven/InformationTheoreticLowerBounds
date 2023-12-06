@@ -5,23 +5,23 @@ This repository contains a Python implementation of an autoencoder for experimen
 
 ## Installation
 
-To run this project, first clone the repository to your local machine:
-git clone https://github.com/your-username/your-repo-name.git
+To run this project, first clone the repository to your local machine: \
+git clone https://github.com/your-username/your-repo-name.git \
 cd your-repo-name
 
 ### Requirements
 
-Ensure you have the following installed:
+Ensure you have the following installed: \
 - Python 3
 - NumPy
 - PyTorch
 
-You can install the necessary libraries using:
+You can install the necessary libraries using: \
 pip install numpy torch
 
 ## Usage
 
-The `main.py` script is used to run the simulations. You can specify various parameters as command-line arguments.
+The `main.py` script is used to run the simulations. You can specify various parameters as command-line arguments. \
 python3 main.py --Dataset "DatasetName" [other options]
 
 ### Command-Line Arguments
