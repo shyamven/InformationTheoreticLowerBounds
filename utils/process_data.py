@@ -37,7 +37,7 @@ def FindMSELowerBound(d, l, h, K):
             # if directional_changes % 2 == 1: add = False
             # else: add = True
             
-    return current_f
+    return next_f
 
 
 def f(x, d, l, h, K):
