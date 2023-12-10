@@ -18,7 +18,7 @@ if __name__ == "__main__":
     parser.add_argument('--Iterations', type=int, default=10, help='Number of iterations to repeat task')
     parser.add_argument('--InputDim', type=int, default=100, help='Dimensionality of the input space')
     parser.add_argument('--LatentDim', type=int, default=10, help='Dimensionality of the latent space')
-    parser.add_argument('--NumHidden', type=int, default=4, help='Number of hidden layers in the encoder/decoder')
+    parser.add_argument('--NumHidden', type=int, default=2, help='Number of hidden layers in the encoder/decoder')
     args = parser.parse_args()
     
     DatasetName = args.Dataset
@@ -35,7 +35,7 @@ if __name__ == "__main__":
     X_train, X_test = LoadDataset(DatasetName, train_size, input_dim)
     
     # Compare Autoencoder MSE With Lower Bound
-    train_losses, test_losses = train_encoder_results(DatasetName, X_train, X_test, iterations, epochs, batch_size, input_dim, latent_dim, num_hidden, device)
+    train_losses, test_losses, lower_bounds = train_encoder_results(DatasetName, X_train, X_test, iterations, epochs, batch_size, input_dim, latent_dim, num_hidden, device)
     
     # Path for the directory
     results_dir = 'Results'
@@ -47,7 +47,9 @@ if __name__ == "__main__":
     # Path for the CSV files
     train_losses_path = f'Results/TRAIN_{DatasetName}_InputDim={input_dim}_LatentDim={latent_dim}_TrainSize={train_size}_BatchSize={batch_size}_Epochs={epochs}_Iterations={iterations}.csv'
     test_losses_path = f'Results/TEST_{DatasetName}_InputDim={input_dim}_LatentDim={latent_dim}_TrainSize={train_size}_BatchSize={batch_size}_Epochs={epochs}_Iterations={iterations}.csv'
+    lower_bounds_path = f'Results/LB_{DatasetName}_InputDim={input_dim}_LatentDim={latent_dim}_TrainSize={train_size}_BatchSize={batch_size}_Epochs={epochs}_Iterations={iterations}.csv'
     
     # Save matrices to CSV
     np.savetxt(train_losses_path, train_losses, delimiter=',')
     np.savetxt(test_losses_path, test_losses, delimiter=',')
+    np.savetxt(lower_bounds_path, lower_bounds, delimiter=',')
