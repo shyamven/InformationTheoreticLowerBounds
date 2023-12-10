@@ -45,9 +45,9 @@ if __name__ == "__main__":
         os.makedirs(results_dir)
         
     # Path for the CSV files
-    train_losses_path = f'Results/TRAIN_{DatasetName}_InputDim={input_dim}_LatentDim={latent_dim}_TrainSize={train_size}_BatchSize={batch_size}_Epochs={epochs}_Iterations={iterations}.csv'
-    test_losses_path = f'Results/TEST_{DatasetName}_InputDim={input_dim}_LatentDim={latent_dim}_TrainSize={train_size}_BatchSize={batch_size}_Epochs={epochs}_Iterations={iterations}.csv'
-    lower_bounds_path = f'Results/LB_{DatasetName}_InputDim={input_dim}_LatentDim={latent_dim}_TrainSize={train_size}_BatchSize={batch_size}_Epochs={epochs}_Iterations={iterations}.csv'
+    train_losses_path = f'Results/TRAIN_{DatasetName}_InputDim={input_dim}_LatentDim={latent_dim}_NumHidden={num_hidden}_TrainSize={train_size}_BatchSize={batch_size}_Epochs={epochs}_Iterations={iterations}.csv'
+    test_losses_path = f'Results/TEST_{DatasetName}_InputDim={input_dim}_LatentDim={latent_dim}_NumHidden={num_hidden}_TrainSize={train_size}_BatchSize={batch_size}_Epochs={epochs}_Iterations={iterations}.csv'
+    lower_bounds_path = f'Results/LB_{DatasetName}_InputDim={input_dim}_LatentDim={latent_dim}_NumHidden={num_hidden}_TrainSize={train_size}_BatchSize={batch_size}_Epochs={epochs}_Iterations={iterations}.csv'
     
     # Save matrices to CSV
     np.savetxt(train_losses_path, train_losses, delimiter=',')
