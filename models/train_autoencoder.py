@@ -63,18 +63,16 @@ def train_autoencoder(X_train, X_test, i, iterations, epochs, batch_size, input_
 
 # A function that will return results accross multiple iterations
 def train_encoder_results(DatasetName, X_train, X_test, iterations, epochs, batch_size, input_dim, latent_dim, num_hidden, device):
-    # Calculating MSE Lower Bound
+    # Initializing d, l, L, and K
+    d = input_dim # Dimensionality of Input Space
+    l = latent_dim # Dimensionality of Latent Space
+    L = num_hidden + 1 # Number of Decoder Layers
+    K = ((10**36)*(d**2) / 16)**L # Lipschitz Constant Upper Bound
+    
     if DatasetName == 'Uniform':
-        d = input_dim # Dimensionality of Input Space
-        l = latent_dim # Dimensionality of Latent Space
-        K = ((10**36)*(d**2) / 16)**(num_hidden + 1) # Lipschitz Constant Upper Bound
         h = np.log(1) * d # Entropy for d (i.i.d) RVs: h(X) = np.log(1 - 0) * d
         
-    elif DatasetName == 'TruncatedNormal':
-        d = input_dim # Dimensionality of Input Space
-        l = latent_dim # Dimensionality of Latent Space
-        K = 10000 # Lipschitz Constant
-        
+    elif DatasetName == 'TruncatedNormal':        
         # Parameters for the standard normal distribution truncated to [0,1]
         mu, sigma, a, b = 0, 1, 0, 1
         alpha = (a - mu) / sigma # Standardized lower bound
@@ -88,9 +86,6 @@ def train_encoder_results(DatasetName, X_train, X_test, iterations, epochs, batc
         h = d * entropy_trunc_normal
         
     elif DatasetName == 'ScaledUniform':
-        d = input_dim # Dimensionality of Input Space
-        l = latent_dim # Dimensionality of Latent Space
-        K = 10000 # Lipschitz Constant
         h = np.log(0.5) * d # Entropy for d (i.i.d) RVs: h(X) = np.log(0.5 - 0) * d
         
     assert d >= l
@@ -110,6 +105,6 @@ def train_encoder_results(DatasetName, X_train, X_test, iterations, epochs, batc
         loss_train, loss_test, lower_bound = train_autoencoder(X_train, X_test, i, iterations, epochs, batch_size, input_dim, latent_dim, num_hidden, MSE_LB, device=device)  
         train_losses[i,:] = loss_train
         test_losses[i,:] = loss_test
-        lower_bounds[i,:] = lower_bounds
+        lower_bounds[i,:] = lower_bound
         
     return train_losses, test_losses, lower_bounds
