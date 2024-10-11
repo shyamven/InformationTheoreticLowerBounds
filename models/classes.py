@@ -12,7 +12,7 @@ class Autoencoder(nn.Module):
         # The dimensions of these layers decrease from input_dim to latent_dim
         encoder_layers = []
         current_dim = input_dim  # Initialize current_dim as input_dim
-        for i in range(m + 1):
+        for i in range(m):
             # Calculate the output dimension for this layer
             out_dim = int(input_dim - step * (i + 1))
             # Add a linear layer followed by a sigmoid activation
@@ -30,7 +30,7 @@ class Autoencoder(nn.Module):
         # The dimensions of these layers increase from latent_dim back to input_dim
         decoder_layers = []
         current_dim = latent_dim  # Initialize current_dim as latent_dim
-        for i in range(m + 1):
+        for i in range(m):
             # Calculate the output dimension for this layer
             out_dim = int(latent_dim + step * (i + 1))
             # Add a linear layer followed by a sigmoid activation
@@ -56,9 +56,9 @@ class Autoencoder(nn.Module):
         return x
 
 
-class RegressionNetwork(nn.Module):
+class ClassicalNetwork(nn.Module):
     def __init__(self, input_dim, latent_dim, output_dim, m):
-        super(RegressionNetwork, self).__init__()
+        super(ClassicalNetwork, self).__init__()
 
         # Calculate the step size for interpolation
         # This determines the difference in dimensionality between each hidden layer
@@ -68,7 +68,7 @@ class RegressionNetwork(nn.Module):
         # The dimensions of these layers decrease from input_dim to latent_dim
         encoder_layers = []
         current_dim = input_dim  # Initialize current_dim as input_dim
-        for i in range(m + 1):
+        for i in range(m):
             # Calculate the output dimension for this layer
             out_dim = int(input_dim - step * (i + 1))
             # Add a linear layer followed by a sigmoid activation
@@ -81,12 +81,12 @@ class RegressionNetwork(nn.Module):
         # This layer compresses the representation to the latent dimension
         encoder_layers.append(nn.Linear(current_dim, latent_dim))
         encoder_layers.append(nn.Sigmoid())
-
-        # Create regressor layers
+        
+        # Create regressor/classifier layers
         # The dimensions of these layers decrease from latent_dim to output_dim
         regressor_layers = []
         current_dim = latent_dim  # Initialize current_dim as latent_dim
-        for i in range(m + 1):
+        for i in range(m):
             # Calculate the output dimension for this layer
             out_dim = int(latent_dim + step * (i + 1))
             # Add a linear layer followed by a sigmoid activation
@@ -95,10 +95,8 @@ class RegressionNetwork(nn.Module):
             # Update current_dim for the next layer
             current_dim = out_dim
 
-        # Ensure the final output layer matches the original input dimension
-        # This is necessary to reconstruct the input from the latent representation
+        # Ensure the final output layer matches the output dimension
         regressor_layers.append(nn.Linear(current_dim, output_dim))
-        # regressor_layers.append(nn.Sigmoid())
 
         # Define the encoder and regressor
         # nn.Sequential wraps the individual layers into a single module
@@ -124,7 +122,7 @@ class Decoder(nn.Module):
         # The dimensions of these layers increase from latent_dim back to input_dim
         decoder_layers = []
         current_dim = latent_dim  # Initialize current_dim as latent_dim
-        for i in range(m + 1):
+        for i in range(m):
             # Calculate the output dimension for this layer
             out_dim = int(latent_dim + step * (i + 1))
             # Add a linear layer followed by a sigmoid activation

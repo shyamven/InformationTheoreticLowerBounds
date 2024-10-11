@@ -3,7 +3,7 @@ import numpy as np
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 from utils.process_data import ApproxMSELowerBound #, FindMSELowerBound
-from models.classes import RegressionNetwork, Decoder
+from models.classes import ClassicalNetwork, Decoder
 
 def enforce_max_norm(weight_matrix, max_norm):
     """
@@ -18,26 +18,19 @@ def enforce_max_norm(weight_matrix, max_norm):
         
 
 # This function records the MSE loss across all epochs w.r.t the MSE lower bound
-def train_regressor(loss_function, X_train, y_train, X_test, y_test, i, iterations, epochs, batch_size, input_dim, latent_dim, output_dim, num_hidden, MSE_LB, max_norm, device='cpu'):
+def train_regressor(X_train, y_train, X_test, y_test, i, iterations, epochs, batch_size, input_dim, latent_dim, output_dim, num_hidden, MSE_LB, max_norm, device='cpu'):
     # Initialize the regression network and optimizer
-    regressor = RegressionNetwork(input_dim, latent_dim, output_dim, num_hidden)
+    regressor = ClassicalNetwork(input_dim, latent_dim, output_dim, num_hidden)
     decoder = Decoder(input_dim, latent_dim, num_hidden)
     criterion = torch.nn.MSELoss()
-    if loss_function == 'MSE':
-        optimizer = optim.Adam(decoder.parameters(), lr=5e-3) # 5e-3
-        optimizer_reg = optim.Adam(regressor.parameters(), lr=5e-3) # 5e-3
-    elif loss_function == 'MSEL2':
-        optimizer = optim.Adam(decoder.parameters(), lr=5e-6, weight_decay=1e-5)
-        optimizer_reg = optim.Adam(regressor.parameters(), lr=5e-3)
-    else:
-        print('Error: Loss function not recognized.')
-        exit(1)
+    optimizer = optim.Adam(decoder.parameters(), lr=5e-3) # 5e-3
+    optimizer_reg = optim.Adam(regressor.parameters(), lr=5e-3) # 5e-3
     
     # Create DataLoader
     train_dataset = TensorDataset(X_train, y_train)
     train_dataloader = DataLoader(train_dataset, batch_size, shuffle=True)
     test_dataset = TensorDataset(X_test, y_test)
-    test_dataloader = DataLoader(test_dataset, batch_size, shuffle=True)
+    test_dataloader = DataLoader(test_dataset, batch_size, shuffle=False)
     
     # Instantiate train and test loss
     loss_train = np.zeros(epochs)
@@ -46,11 +39,11 @@ def train_regressor(loss_function, X_train, y_train, X_test, y_test, i, iteratio
     loss_test_reg = np.zeros(epochs)
     lower_bound = np.zeros(epochs)
 
-    # Training the autoencoder
     for epoch in range(epochs):
         epoch_loss = 0; epoch_loss_reg = 0
         epoch_test_loss = 0; epoch_test_loss_reg = 0
         
+        # Training the autoencoder
         for batch_X, batch_y in train_dataloader:
             decoder.train(); regressor.train()
             
@@ -61,15 +54,10 @@ def train_regressor(loss_function, X_train, y_train, X_test, y_test, i, iteratio
             # Forward pass
             preds, latents = regressor(batch_X)
             outputs = decoder(latents)
-            
-            error = torch.mean(torch.norm(batch_X - outputs, dim=1)**2)
-            error_reg = torch.mean(torch.norm(batch_y - preds, dim=1)**2)
-            epoch_loss += error.item()
-            epoch_loss_reg += error_reg.item()
         
             # Backward pass
-            loss = criterion(batch_X, outputs)
-            loss_reg = criterion(batch_y, preds)
+            loss = criterion(outputs, batch_X)
+            loss_reg = criterion(preds, batch_y)
             loss.backward()
             loss_reg.backward()
             optimizer.step()
@@ -88,7 +76,18 @@ def train_regressor(loss_function, X_train, y_train, X_test, y_test, i, iteratio
         
         decoder.eval(); regressor.eval() 
         
-        # Validation data
+        # Training data (computing error)
+        with torch.no_grad():
+            for batch_X, batch_y in train_dataloader:
+                preds, latents = regressor(batch_X)
+                outputs = decoder(latents)
+                
+                error = torch.mean(torch.norm(batch_X - outputs, dim=1)**2)
+                error_reg = torch.mean(torch.norm(batch_y - preds, dim=1)**2)
+                epoch_loss += error.item()
+                epoch_loss_reg += error_reg.item()
+        
+        # Validation data (computing error)
         with torch.no_grad():
             for batch_X, batch_y in test_dataloader:
                 preds_test, latents_test = regressor(batch_X)
@@ -116,12 +115,12 @@ def train_regressor(loss_function, X_train, y_train, X_test, y_test, i, iteratio
 
 
 # A function that will return results accross multiple iterations
-def train_regressor_results(dataset_name, loss_function, X_train, y_train, X_test, y_test, iterations, epochs, batch_size, input_dim, latent_dim, output_dim, num_hidden, h_x, device):
+def train_regressor_results(dataset_name, X_train, y_train, X_test, y_test, iterations, epochs, batch_size, input_dim, latent_dim, output_dim, num_hidden, h_x, device):
     # Initializing d, l, L, and K
     d = input_dim # Dimensionality of Input Space
     l = latent_dim # Dimensionality of Latent Space
     L = num_hidden + 1 # Number of Decoder Layers
-    max_norm = 100 # Max norm constraint on the weights
+    max_norm = 2.25 # Max norm constraint on the weights
     # K = np.sqrt(((10**36)*(d**2) / 16)**L) # Lipschitz Constant Upper Bound
     K = (max_norm**(2*L)) / (16**L)
         
@@ -140,7 +139,7 @@ def train_regressor_results(dataset_name, loss_function, X_train, y_train, X_tes
     lower_bounds = np.zeros((iterations, epochs))
     
     for i in range(iterations):
-        loss_train, loss_test, loss_train_reg, loss_test_reg, lower_bound = train_regressor(loss_function, X_train, y_train, X_test, y_test, i, iterations, epochs, batch_size, input_dim, latent_dim, output_dim, num_hidden, MSE_LB, max_norm, device=device)  
+        loss_train, loss_test, loss_train_reg, loss_test_reg, lower_bound = train_regressor(X_train, y_train, X_test, y_test, i, iterations, epochs, batch_size, input_dim, latent_dim, output_dim, num_hidden, MSE_LB, max_norm, device=device)  
         train_losses[i,:] = loss_train
         train_losses_reg[i,:] = loss_train_reg
         test_losses[i,:] = loss_test
