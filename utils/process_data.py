@@ -1,5 +1,5 @@
 import numpy as np
-from scipy import optimize
+# from scipy import optimize
 
 def ApproxMSELowerBound(d, l, h_x, K):
     # Calculating approximate s*
@@ -13,6 +13,9 @@ def ApproxMSELowerBound(d, l, h_x, K):
     
     return LB
 
+#####################################
+## Deprecated
+#####################################
 # def FindMSELowerBound(d, l, h, K):
 #     # Initialization
 #     x = 1e-100
