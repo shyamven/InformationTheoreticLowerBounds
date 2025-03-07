@@ -1,7 +1,7 @@
 # Information-Theoretic Lower Bounds
 
 ## Overview
-This repository contains a Python implementation of an autoencoder for experimental analysis in the field of information theory. The autoencoder is designed to compare the mean squared error (MSE) with the an information theoretic lower bound on generalization MSE across various datasets.
+This repository contains a Python implementation of an autoencoder for experimental analysis in the field of information theory. The autoencoder is designed to compare the mean squared error (MSE) with an information theoretic lower bound on generalization MSE across various datasets.
 
 ## Installation
 
