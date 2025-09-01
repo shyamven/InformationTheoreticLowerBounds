@@ -1,7 +1,7 @@
 # An Information-Theoretic Lower Bound on the Generalization Error of Autoencoders
 
 ## Overview
-This repository provides the code implementation for the experiments presented in [An Information-Theoretic Lower Bound on the Generalization Error of Autoencoders](https://openreview.net/forum?id=0esF0M467w). These experiments are designed to benchmark autoencoder performance versus an information-theoretic lower bound on generalization error, which can be used for detecting overfitting and for streamlining neural architecture search by identifying architectures that cannot achieve a given performance threshold.
+This repository provides the code implementation for the illustrations presented in [An Information-Theoretic Lower Bound on the Generalization Error of Autoencoders](https://openreview.net/forum?id=0esF0M467w). These illustrations are designed to benchmark autoencoder performance versus an information-theoretic lower bound on generalization error, which can be used for detecting overfitting and for streamlining neural architecture search by identifying architectures that cannot achieve a given performance threshold.
 
 ### Requirements
 
@@ -37,7 +37,7 @@ The results of the simulations are saved in the `Results` directory as CSV files
 
 Plain Text:
 ```
-Shyam Venkatasubramanian<sup>*<\sup>, Sean Moushegian<sup>*</sup>, Ahmed Aloui<sup>*</sup>, Vahid Tarokh. An Information-Theoretic Lower Bound on the Generalization Error of Autoencoders. Transactions on Machine Learning Research.
+Shyam Venkatasubramanian*, Sean Moushegian*, Ahmed Aloui*, Vahid Tarokh. An Information-Theoretic Lower Bound on the Generalization Error of Autoencoders. Transactions on Machine Learning Research.
 ```
 BibTeX:
 ```
