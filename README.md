@@ -37,7 +37,7 @@ The results of the simulations are saved in the `Results` directory as CSV files
 
 Plain Text:
 ```
-Shyam Venkatasubramanian<sup>*</sup>, Sean Moushegian<sup>*</sup>, Ahmed Aloui<sup>*</sup>, Vahid Tarokh. An Information-Theoretic Lower Bound on the Generalization Error of Autoencoders. Transactions on Machine Learning Research.
+Shyam Venkatasubramanian<sup>*<\sup>, Sean Moushegian<sup>*</sup>, Ahmed Aloui<sup>*</sup>, Vahid Tarokh. An Information-Theoretic Lower Bound on the Generalization Error of Autoencoders. Transactions on Machine Learning Research.
 ```
 BibTeX:
 ```
