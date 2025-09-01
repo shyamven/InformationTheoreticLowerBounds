@@ -1,7 +1,7 @@
 # An Information-Theoretic Lower Bound on the Generalization Error of Autoencoders
 
 ## Overview
-This repository provides a Python implementation of an autoencoder designed to benchmark the relationship between empirical mean squared error (MSE) and an information-theoretic lower bound on generalization error. The code enables experiments for detecting overfitting and for streamlining neural architecture search by identifying architectures that cannot achieve a given performance threshold.
+This repository provides the code implementation for [An Information-Theoretic Lower Bound on the Generalization Error of Autoencoders](https://openreview.net/forum?id=0esF0M467w). The provided experiments are designed to benchmark autoencoder performance versus an information-theoretic lower bound on generalization error, which can be used for detecting overfitting and for streamlining neural architecture search by identifying architectures that cannot achieve a given performance threshold.
 
 ### Requirements
 
@@ -32,3 +32,18 @@ python3 main.py --Dataset "DatasetName" [other options]
 ## Results
 
 The results of the simulations are saved in the `Results` directory as CSV files.
+
+## Citation: 
+
+Plain Text:
+```
+Shyam Venkatasubramanian<sup>*</sup>, Sean Moushegian<sup>*</sup>, Ahmed Aloui<sup>*</sup>, Vahid Tarokh. An Information-Theoretic Lower Bound on the Generalization Error of Autoencoders. Transactions on Machine Learning Research.
+```
+BibTeX:
+```
+@inproceedings{ssa2025information,
+  title={An Information-Theoretic Lower Bound on the Generalization Error of Autoencoders},
+  author={Venkatasubramanian, Shyam and Moushegian, Sean and Aloui, Ahmed and Tarokh, Vahid},
+  booktitle={Transactions on Machine Learning Research}
+}
+```
